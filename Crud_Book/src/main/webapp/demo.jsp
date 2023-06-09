@@ -1,16 +1,42 @@
 <%--
   Created by IntelliJ IDEA.
-  User: DELL
-  Date: 6/8/2023
-  Time: 10:08 AM
+  User: Dell
+  Date: 6/2/2023
+  Time: 2:48 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
+<h1>${action}</h1>
+<a href="books?action=create">Create Customer</a>
+<c:if test="${requestScope['products'].size() != 0}">
+    <table border="1">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Date</td>
+            <td>Author</td>
+            <td>Category</td>
+            <td>Action</td>
+        </tr>
+        <c:forEach items="${books}" var="book">
+            <tr>
+                <td>${book.id}</td>
+                <td>${book.name}</td>
+                <td>${book.date}</td>
+                <td>${book.author}</td>
+                <td>${book.category.name}</td>
+                <td><a href="books?action=edit&id=${book.id}">Edit</a> </td>
+                <td><a href="books?action=delete&id=${book.id}" onclick="return confirm('Do you want to remove ${book.name}?')">Delete</a> </td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
 
 </body>
 </html>

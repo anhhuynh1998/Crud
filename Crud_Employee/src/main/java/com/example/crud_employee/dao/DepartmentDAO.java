@@ -1,17 +1,18 @@
-package com.example.crud_book.dao;
+package com.example.crud_employee.dao;
 
-import com.example.crud_book.model.Category;
+import com.example.crud_employee.model.Department;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-public class CategoryDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/crud_book";
+
+public class DepartmentDAO {
+    private String jdbcURL = "jdbc:mysql://localhost:3306/crud_employee";
     private String jdbcUsername = "root";
     //                            password của mình
     private String jdbcPassword = "nhatanh123456";
-    private final String SELECT_CATEGORY = "SELECT * FROM category";
-    private final String SELECT_CATEGORY_BY_ID = "SELECT * FROM category WHERE id = ?";
+    private final String SELECT_DEPARTMENT = "SELECT * FROM department";
+    private final String SELECT_DEPARTMENT_BY_ID = "SELECT * FROM department WHERE id = ?";
     protected Connection getConnection() {
         Connection connection = null;
         try {
@@ -24,29 +25,29 @@ public class CategoryDAO {
         }
         return connection;
     }
-    public List<Category> findAll(){
-        List<Category> categories = new ArrayList<>();
+    public List<Department> findAll(){
+        List<Department> departments = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection
-                     .prepareStatement(SELECT_CATEGORY)) {
+                     .prepareStatement(SELECT_DEPARTMENT)) {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()){
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                categories.add(new Category(id, name));
+                departments.add(new Department(id, name));
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        return categories;
+        return departments;
     }
-    public Category findById(int id) {
+    public Department findById(int id) {
         try (Connection connection = getConnection();
 
              // Step 2: truyền câu lênh mình muốn chạy nằm ở trong này (SELECT_USERS)
              PreparedStatement preparedStatement = connection
-                     .prepareStatement(SELECT_CATEGORY_BY_ID);) {
+                     .prepareStatement(SELECT_DEPARTMENT_BY_ID);) {
             System.out.println(preparedStatement);
             preparedStatement.setInt(1, id);
 
@@ -59,7 +60,7 @@ public class CategoryDAO {
                 int idCus = rs.getInt("id");
                 String name = rs.getString("name");
 
-                return new Category(idCus, name);
+                return new Department(idCus, name);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

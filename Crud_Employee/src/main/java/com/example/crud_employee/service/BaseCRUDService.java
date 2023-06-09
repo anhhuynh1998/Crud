@@ -1,4 +1,6 @@
-package com.example.crud_book.service;
+package com.example.crud_employee.service;
+
+import com.example.crud_employee.dto.Pageable;
 
 import java.util.List;
 
@@ -10,5 +12,5 @@ public interface BaseCRUDService <T>{
 
     T findById(int id);
 
-    List<T> findAll();
+    List<T> findAll(Pageable pageable);
 }

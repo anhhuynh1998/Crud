@@ -1,6 +1,6 @@
 package com.example.crud_book.dao;
 import com.example.crud_book.model.Book;
-import jdk.jfr.Category;
+import com.example.crud_book.model.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -48,15 +48,90 @@ public class BookDAO {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                Date price = rs.getDouble("price");
-                int quantity = rs.getInt("quantity");
+                Date date = rs.getDate("date");
+                String author = rs.getString("author");
                 String category_name = rs.getString("category_name");
                 int category_id = rs.getInt("category_id");
-                books.add(new Book(id, name, price,quantity, new Category(category_id, category_name)));
+                books.add(new Book(id, name, date,author, new Category(category_id, category_name)));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return books;
+    }
+    public Book findById(int id) {
+        try (Connection connection = getConnection();
+
+             // Step 2: truyền câu lênh mình muốn chạy nằm ở trong này (SELECT_USERS)
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement(SELECT_BOOK_BY_ID);) {
+            System.out.println(preparedStatement);
+            preparedStatement.setInt(1, id);
+
+            // Step 3: tương đương vowis cái sét
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Step 4:
+            //kiểm tra còn data hay không. còn thì cứ lấy bằng câu lệnh ở dưới
+            while (rs.next()) {
+                //(truyên vào tên cột)
+                int idCus = rs.getInt("id");
+                //(truyên vào tên cột)
+                String name = rs.getString("name");
+                //(truyên vào tên cột)
+                Date date = rs.getDate("date");
+                String author = rs.getString("author");
+                int category_id = rs.getInt("category_id");
+                String category_name = rs.getString("category_name");
+                return new Book(idCus, name, date,author, new Category(category_id,category_name));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    public void insertBook(Book book) {
+        System.out.println(INSERT_BOOK);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOK)) {
+            preparedStatement.setString(1, book.getName());
+            java.sql.Date dateSQL = new java.sql.Date(book.getDate().getTime());
+            preparedStatement.setDate(2,  dateSQL);
+            preparedStatement.setString(3, book.getAuthor());
+            preparedStatement.setInt(4, book.getCategory().getId());
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void updateBook(Book book) {
+
+        try (Connection connection = getConnection();
+             //UPDATE `customers` " +
+             //            "SET `name` = ?, `email` = ?, role_id = ? WHERE (`id` = ?);";
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BOOK)) {
+            preparedStatement.setString(1, book.getName());
+            java.sql.Date dateSQL = new java.sql.Date(book.getDate().getTime());
+            preparedStatement.setDate(2,  dateSQL);
+            preparedStatement.setString(3, book.getAuthor());
+            preparedStatement.setInt(4, book.getCategory().getId());
+            preparedStatement.setInt(5, book.getId());
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void deleteBook(int id) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BOOK)) {
+            preparedStatement.setInt(1, id);
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
