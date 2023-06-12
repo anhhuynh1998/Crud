@@ -15,6 +15,10 @@
   <input type="search" name="search" id="search" value="${pageable.search}" onsearch="onClearSearch()" />
   <button id="searchButton">Search</button>
 </form>
+<form action="employees" method="get">
+  <input type="date" name="searchDate" id="searchD" value="${pageable.search}" onsearch="onClearSearch()" />
+  <button id="searchDate">Search Date</button>
+</form>
 <c:if test="${requestScope['employee'].size() != 0}">
   <table border="1">
     <tr>
