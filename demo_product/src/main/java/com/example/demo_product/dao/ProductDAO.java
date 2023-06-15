@@ -8,13 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/product";
+    private String jdbcURL = "jdbc:mysql://localhost:3306/lazadalaska";
     private String jdbcUsername = "root";
     //                            password của mình
     private String jdbcPassword = "nhatanh123456";
 
-    private final String SELECT_PRODUCT = "select p.*,c.name as " +
-            "category_name from products p left join category c on p.category_id = c.id";
+    private String SELECT_ALL_PRODUCT = "SELECT \n" +
+            "    products.*, category.`name` as category_name \n" +
+            "FROM\n" +
+            "    products\n" +
+            "        LEFT JOIN\n" +
+            "    category ON products.category_id = category.id\n" +
+            "WHERE\n" +
+            "    lower(products.`name`) LIKE '%s' OR \n" +
+            "        OR lower(category.`name`) LIKE '%s' order by %s %s LIMIT %d OFFSET %d  ;\n";
     private final String SELECT_PRODUCT_BY_ID ="SELECT products.*, category.`name` as category_name " +
             "FROM products LEFT JOIN category " + "ON products.category_id = " +
             "category.id where products.id = ?;";
@@ -38,12 +45,20 @@ public class ProductDAO {
         }
         return connection;
     }
-
+    private final String TOTAL_PRODUCT = "SELECT \n" +
+            "    COUNT(1) as total \n" +
+            "FROM\n" +
+            "    products\n" +
+            "        LEFT JOIN\n" +
+            "    department ON products.category_id = category.id\n" +
+            "WHERE\n" +
+            "    lower(products.`name`) LIKE ? \n" +
+            "        OR lower(category.`name`) LIKE ? ;";
     public List<Product> findALL(){
         List<Product> products = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection
-                     .prepareStatement(SELECT_PRODUCT);) {
+                     .prepareStatement(SELECT_ALL_PRODUCT);) {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {

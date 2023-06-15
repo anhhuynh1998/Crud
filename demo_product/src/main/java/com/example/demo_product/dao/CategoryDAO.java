@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/product";
+    private String jdbcURL = "jdbc:mysql://localhost:3306/lazadalaska";
     private String jdbcUsername = "root";
     //                            password của mình
     private String jdbcPassword = "nhatanh123456";
